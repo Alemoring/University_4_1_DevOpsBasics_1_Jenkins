@@ -1,0 +1,15 @@
+# Python
+backend/venv/
+__pycache__/
+*.pyc
+
+# React
+client/my_app/node_modules/
+client/my_app/build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
