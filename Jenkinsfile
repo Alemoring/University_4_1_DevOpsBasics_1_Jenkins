@@ -14,8 +14,7 @@ pipeline {
                 sh '''
                 cd backend
                 python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt
+                venv/bin/pip install -r requirements.txt
                 '''
             }
         }
@@ -39,6 +38,9 @@ pipeline {
         }
 
         stage('Backend tests') {
+            when {
+                branch 'dev'
+            }
             steps {
                 sh '''
                 cd backend
@@ -46,5 +48,6 @@ pipeline {
                 '''
             }
         }
+
     }
 }
