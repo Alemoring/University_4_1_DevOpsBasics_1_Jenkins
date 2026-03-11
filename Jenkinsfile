@@ -65,7 +65,7 @@ pipeline {
         stage('Deploy dev servers') {
             when {
 				expression { 
-					return env.BRANCH_NAME == 'dev' || env.BRANCH_NAME.startsWith('feature/') 
+					return env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'feature' 
 				}
 			}
             steps {
