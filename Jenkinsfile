@@ -40,8 +40,8 @@ pipeline {
         stage('Run React build') {
             steps {
                 sh '''
-                npm install -g serve
-                serve -s client/my-app/dist -l 3000
+                cd client/my-app
+                nohup npm run preview -- --host --port 3000 > react.log 2>&1 &
                 '''
             }
         }
