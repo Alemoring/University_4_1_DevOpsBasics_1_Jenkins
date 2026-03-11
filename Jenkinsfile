@@ -32,7 +32,7 @@ pipeline {
         stage('Install frontend dependencies') {
             steps {
                 sh '''
-                cd client/my_app
+                cd client/my-app
                 npm install
                 '''
             }
@@ -41,7 +41,7 @@ pipeline {
         stage('Build React') {
             steps {
                 sh '''
-                cd client/my_app
+                cd client/my-app
                 npm run build
                 '''
             }
