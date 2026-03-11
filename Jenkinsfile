@@ -33,6 +33,16 @@ pipeline {
                 sh '''
                 cd client/my-app
                 npm run build
+                npm start
+                '''
+            }
+        }
+        stage('Build Fast API') {
+            steps {
+                sh '''
+                cd backend
+                . venv/bin/activate
+                uvicorn main:app --reload
                 '''
             }
         }
