@@ -9,6 +9,15 @@ pipeline {
             }
         }
 
+        stage('Debug workspace') {
+            steps {
+                sh '''
+                pwd
+                ls -R
+                '''
+            }
+        }
+
         stage('Install backend dependencies') {
             steps {
                 sh '''
@@ -42,11 +51,10 @@ pipeline {
             steps {
                 sh '''
                 cd backend
-                .venv/bin/activate
+                . venv/bin/activate
                 pytest
                 '''
             }
         }
-
     }
 }
