@@ -133,7 +133,7 @@ function App() {
             </button>
           </div>
           <div className="col border border-black">
-            <button className="btn btn-danger" onClick={() => updateHistory()}>
+            <button className="btn btn-primary" onClick={() => updateHistory()}>
               Пересобрать историю
             </button>
           </div>
