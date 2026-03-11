@@ -3,6 +3,12 @@ pipeline {
 
     stages {
 
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Detect branch') {
             steps {
                 script {
@@ -10,13 +16,9 @@ pipeline {
                         script: "git rev-parse --abbrev-ref HEAD",
                         returnStdout: true
                     ).trim()
-                }
-            }
-        }
 
-        stage('Checkout') {
-            steps {
-                checkout scm
+                    echo "Detected branch: ${env.GIT_BRANCH_NAME}"
+                }
             }
         }
 
@@ -75,10 +77,11 @@ pipeline {
 
         stage('Deploy dev servers') {
             when {
-				expression { 
-					return env.GIT_BRANCH_NAME == 'dev' || env.GIT_BRANCH_NAME == 'dev' 
-				}
-			}
+                expression {
+                    env.GIT_BRANCH_NAME == 'dev' ||
+                    env.GIT_BRANCH_NAME.startsWith('feature')
+                }
+            }
             steps {
                 sh '''
                 sudo systemctl restart fastapi-debug
