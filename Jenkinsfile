@@ -42,10 +42,8 @@ pipeline {
             steps {
                 sh '''
                 cd backend
-                . venv/bin/activate
-                pytest
+                venv/bin/pytest
                 '''
             }
-        }
     }
 }
