@@ -41,7 +41,7 @@ pipeline {
             steps {
                 sh '''
                 cd client/my-app
-                nohup npm run preview -- --host --port 3000 > react.log 2>&1 &
+                setsid npm run preview -- --host --port 3000 > react.log 2>&1 < /dev/null &
                 '''
             }
         }
@@ -51,7 +51,7 @@ pipeline {
                 sh '''
                 cd backend
                 . venv/bin/activate
-                nohup venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
+                setsid venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 < /dev/null &
                 '''
             }
         }
