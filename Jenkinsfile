@@ -37,21 +37,17 @@ pipeline {
             }
         }
 
-        stage('Run React build') {
+        stage('Deploy servers') {
             steps {
                 sh '''
-                cd client/my-app
-                setsid npm run preview -- --host --port 3000 > react.log 2>&1 < /dev/null &
-                '''
-            }
-        }
+                pkill -f uvicorn || true
+                pkill -f vite || true
 
-        stage('Build Fast API') {
-            steps {
-                sh '''
                 cd backend
-                . venv/bin/activate
-                setsid venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 < /dev/null &
+                setsid venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 > ../fastapi.log 2>&1 < /dev/null &
+
+                cd ../client/my-app
+                setsid npm run preview -- --host --port 3000 > ../../react.log 2>&1 < /dev/null &
                 '''
             }
         }
