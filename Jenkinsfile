@@ -48,9 +48,8 @@ pipeline {
 
                 cd backend
 
-                chmod +x venv/bin/uvicorn
-
-                nohup ./venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 > ../fastapi.log 2>&1 &
+                nohup setsid venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 \
+                > ../fastapi.log 2>&1 < /dev/null &
 
                 cd ../client/my-app
 
