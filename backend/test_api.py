@@ -3,49 +3,42 @@ from main import app
 
 client = TestClient(app)
 
-def test_reset():
-    response = client.get("/reset/")
+
+def test_get_role():
+    response = client.get("/get/role/")
     assert response.status_code == 200
-    data = response.json()
-    assert isinstance(data["value"], int)
-    assert data["value"] == 0
-
-
-def test_get():
-    response = client.get("/reset/")
 
     data = response.json()
+    assert "role" in data
+    assert isinstance(data["role"], str)
+    assert len(data["role"]) > 0
 
-    result = data["value"]
 
-    response = client.get("/get/")
+def test_get_location():
+    response = client.get("/get/location/")
     assert response.status_code == 200
-    dataS = response.json()
-    assert isinstance(dataS["value"], int)
-    assert dataS["value"] == result
-
-def test_plus():
-    response = client.get("/get/")
 
     data = response.json()
+    assert "location" in data
+    assert isinstance(data["location"], str)
+    assert len(data["location"]) > 0
 
-    result = data["value"]
 
-    response = client.get("/plus/")
+def test_get_friend():
+    response = client.get("/get/friend/")
     assert response.status_code == 200
-    dataS = response.json()
-    assert isinstance(dataS["value"], int)
-    assert dataS["value"] == result + 1
-
-def test_quatro():
-    response = client.get("/get/")
 
     data = response.json()
+    assert "friend" in data
+    assert isinstance(data["friend"], str)
+    assert len(data["friend"]) > 0
 
-    result = data["value"]
 
-    response = client.get("/quatro/")
+def test_get_action():
+    response = client.get("/get/action/")
     assert response.status_code == 200
-    dataS = response.json()
-    assert isinstance(dataS["value"], int)
-    assert dataS["value"] == result * result
+
+    data = response.json()
+    assert "action" in data
+    assert isinstance(data["action"], str)
+    assert len(data["action"]) > 0

@@ -16,22 +16,22 @@ function App() {
   const [isActionVisible, setIsActionVisible] = useState(false)
 
   async function getRole(){
-    const response = await axios.get("http://localhost:8000/get/role/");
+    const response = await axios.get("http://localhost:8001/get/role/");
     return response.data.role;
   }
 
   async function getLocation(){
-    const response = await axios.get("http://localhost:8000/get/location/");
+    const response = await axios.get("http://localhost:8001/get/location/");
     return response.data.location;
   }
 
   async function getFriend(){
-    const response = await axios.get("http://localhost:8000/get/friend/");
+    const response = await axios.get("http://localhost:8001/get/friend/");
     return response.data.friend;
   }
 
   async function getAction(){
-    const response = await axios.get("http://localhost:8000/get/action/");
+    const response = await axios.get("http://localhost:8001/get/action/");
     return response.data.action;
   }
 

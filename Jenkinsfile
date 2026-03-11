@@ -37,7 +37,10 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy main') {
+            when {
+                branch 'main'
+            }
             steps {
                 sh '''
                 sudo systemctl restart fastapi
@@ -53,7 +56,22 @@ pipeline {
             steps {
                 sh '''
                 cd backend
-                venv/bin/pytest
+                . venv/bin/activate
+                pytest -v
+                '''
+            }
+        }
+
+        stage('Deploy dev servers') {
+            when {
+				expression { 
+					return env.BRANCH_NAME == 'dev' || env.BRANCH_NAME.startsWith('feature/') 
+				}
+			}
+            steps {
+                sh '''
+                sudo systemctl restart fastapi-debug
+                sudo systemctl restart react-debug
                 '''
             }
         }
