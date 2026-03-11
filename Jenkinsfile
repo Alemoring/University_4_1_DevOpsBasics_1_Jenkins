@@ -40,9 +40,7 @@ pipeline {
         stage('Deploy servers') {
             steps {
                 sh '''
-                set -e
                 export BUILD_ID=dontKillMe
-
                 pkill -f uvicorn || true
                 pkill -f vite || true
 
@@ -53,7 +51,8 @@ pipeline {
 
                 cd ../client/my-app
 
-                nohup npm run preview -- --host --port 3000 > ../../react.log 2>&1 &
+                nohup setsid npm run preview -- --host --port 3000 \
+                > ../../react.log 2>&1 < /dev/null &
                 '''
             }
         }
