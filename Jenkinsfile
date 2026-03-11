@@ -33,7 +33,7 @@ pipeline {
                 sh '''
                 cd client/my-app
                 npm run build
-                npm start
+                npm run preview
                 '''
             }
         }
