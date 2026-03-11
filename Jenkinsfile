@@ -33,10 +33,19 @@ pipeline {
                 sh '''
                 cd client/my-app
                 npm run build
-                npm run preview
                 '''
             }
         }
+
+        stage('Run React build') {
+            steps {
+                sh '''
+                npm install -g serve
+                serve -s client/my-app/dist -l 3000
+                '''
+            }
+        }
+
         stage('Build Fast API') {
             steps {
                 sh '''
