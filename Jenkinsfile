@@ -12,7 +12,12 @@ pipeline {
         stage('Detect branch') {
             steps {
                 script {
-                    env.GIT_BRANCH_NAME = params.BRANCH
+                    env.GIT_BRANCH_NAME = sh(
+                        script: "git branch -r --contains HEAD | grep origin | head -n1 | sed 's/origin\\///'",
+                        returnStdout: true
+                    ).trim()
+
+                    echo "Detected branch: ${env.GIT_BRANCH_NAME}"
                 }
             }
         }
