@@ -51,7 +51,7 @@ pipeline {
                 sh '''
                 cd backend
                 . venv/bin/activate
-                uvicorn main:app --reload
+                nohup venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
                 '''
             }
         }
