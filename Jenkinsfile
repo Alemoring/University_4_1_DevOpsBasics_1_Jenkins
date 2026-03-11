@@ -41,6 +41,7 @@ pipeline {
             steps {
                 sh '''
                 set -e
+                export BUILD_ID=dontKillMe
 
                 pkill -f uvicorn || true
                 pkill -f vite || true
