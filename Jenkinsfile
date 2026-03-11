@@ -37,22 +37,11 @@ pipeline {
             }
         }
 
-        stage('Deploy servers') {
+        stage('Deploy') {
             steps {
                 sh '''
-                export BUILD_ID=dontKillMe
-                pkill -f uvicorn || true
-                pkill -f vite || true
-
-                cd backend
-
-                nohup setsid venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 \
-                > ../fastapi.log 2>&1 < /dev/null &
-
-                cd ../client/my-app
-
-                nohup setsid npm run preview -- --host --port 3000 \
-                > ../../react.log 2>&1 < /dev/null &
+                sudo systemctl restart fastapi
+                sudo systemctl restart react
                 '''
             }
         }
