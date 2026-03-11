@@ -9,15 +9,6 @@ pipeline {
             }
         }
 
-        stage('Debug workspace') {
-            steps {
-                sh '''
-                pwd
-                ls -R
-                '''
-            }
-        }
-
         stage('Install backend dependencies') {
             steps {
                 sh '''
