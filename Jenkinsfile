@@ -3,6 +3,17 @@ pipeline {
 
     stages {
 
+        stage('Detect branch') {
+            steps {
+                script {
+                    env.GIT_BRANCH_NAME = sh(
+                        script: "git rev-parse --abbrev-ref HEAD",
+                        returnStdout: true
+                    ).trim()
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -39,7 +50,7 @@ pipeline {
 
         stage('Deploy main') {
             when {
-                branch 'main'
+                expression { env.GIT_BRANCH_NAME == 'main' }
             }
             steps {
                 sh '''
@@ -51,7 +62,7 @@ pipeline {
 
         stage('Backend tests') {
             when {
-                branch 'dev'
+                expression { env.GIT_BRANCH_NAME == 'dev' }
             }
             steps {
                 sh '''
@@ -65,7 +76,7 @@ pipeline {
         stage('Deploy dev servers') {
             when {
 				expression { 
-					return env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'feature' 
+					return env.GIT_BRANCH_NAME == 'dev' || env.GIT_BRANCH_NAME == 'dev' 
 				}
 			}
             steps {
