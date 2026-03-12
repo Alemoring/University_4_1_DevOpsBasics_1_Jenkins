@@ -22,6 +22,20 @@ pipeline {
             }
         }
 
+        stage('Set build directory') {
+            steps {
+                script {
+                    if (env.GIT_BRANCH_NAME == "main") {
+                        env.REACT_BUILD_DIR = "/var/www/main"
+                    } else {
+                        env.REACT_BUILD_DIR = "/var/www/dev"
+                    }
+
+                    echo "React build dir: ${env.REACT_BUILD_DIR}"
+                }
+            }
+        }
+
         stage('Install backend dependencies') {
             steps {
                 sh '''
@@ -46,6 +60,15 @@ pipeline {
                 sh '''
                 cd client/my-app
                 npm run build
+                '''
+            }
+        }
+
+        stage('Copy build') {
+            steps {
+                sh '''
+                rm -rf $REACT_BUILD_DIR/*
+                cp -r client/my-app/dist/* $REACT_BUILD_DIR/
                 '''
             }
         }
@@ -79,7 +102,7 @@ pipeline {
             when {
                 expression {
                     env.GIT_BRANCH_NAME == 'dev' ||
-                    env.GIT_BRANCH_NAME.startsWith('feature')
+                    env.GIT_BRANCH_NAME.startsWith('feauture')
                 }
             }
             steps {
