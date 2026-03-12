@@ -9,6 +9,19 @@ pipeline {
             }
         }
 
+        stage('Detect branch') {
+            steps {
+                script {
+                    env.GIT_BRANCH_NAME = sh(
+                        script: "git branch -r --contains HEAD | grep origin | head -n1 | sed 's/origin\\///'",
+                        returnStdout: true
+                    ).trim()
+
+                    echo "Detected branch: ${env.GIT_BRANCH_NAME}"
+                }
+            }
+        }
+
         stage('Install backend dependencies') {
             steps {
                 sh '''
@@ -37,7 +50,10 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy main') {
+            when {
+                expression { env.GIT_BRANCH_NAME == 'main' }
+            }
             steps {
                 sh '''
                 sudo systemctl restart fastapi
@@ -48,12 +64,28 @@ pipeline {
 
         stage('Backend tests') {
             when {
-                branch 'dev'
+                expression { env.GIT_BRANCH_NAME == 'dev' }
             }
             steps {
                 sh '''
                 cd backend
-                venv/bin/pytest
+                . venv/bin/activate
+                pytest -v
+                '''
+            }
+        }
+
+        stage('Deploy dev servers') {
+            when {
+                expression {
+                    env.GIT_BRANCH_NAME == 'dev' ||
+                    env.GIT_BRANCH_NAME.startsWith('feature')
+                }
+            }
+            steps {
+                sh '''
+                sudo systemctl restart fastapi-debug
+                sudo systemctl restart react-debug
                 '''
             }
         }

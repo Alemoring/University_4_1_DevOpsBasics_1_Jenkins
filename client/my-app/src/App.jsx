@@ -8,31 +8,43 @@ function App() {
   const [location, setLocation] = useState("Локация")
   const [friend, setFriend] = useState("Встречный")
   const [action, setAction] = useState("Действие")
-  
+  const [storyHint, setStoryHint] = useState("")
+
   // Состояния для отслеживания открытия/скрытия информации
   const [isRoleVisible, setIsRoleVisible] = useState(false)
   const [isLocationVisible, setIsLocationVisible] = useState(false)
   const [isFriendVisible, setIsFriendVisible] = useState(false)
   const [isActionVisible, setIsActionVisible] = useState(false)
 
-  async function getRole(){
+  async function getRole() {
     const response = await axios.get("http://localhost:8000/get/role/");
     return response.data.role;
   }
 
-  async function getLocation(){
+  async function getLocation() {
     const response = await axios.get("http://localhost:8000/get/location/");
     return response.data.location;
   }
 
-  async function getFriend(){
+  async function getFriend() {
     const response = await axios.get("http://localhost:8000/get/friend/");
     return response.data.friend;
   }
 
-  async function getAction(){
+  async function getAction() {
     const response = await axios.get("http://localhost:8000/get/action/");
     return response.data.action;
+  }
+
+  async function generateStory() {
+    const response = await axios.get("http://localhost:8000/get/story/");
+    const data = response.data;
+
+    setRole(data.role);
+    setLocation(data.location);
+    setFriend(data.friend);
+    setAction(data.action);
+    setStoryHint(data.story);
   }
 
   async function loadData() {
@@ -43,7 +55,7 @@ function App() {
         getFriend(),
         getAction()
       ]);
-      
+
       // Сохраняем данные в состоянии, но не показываем
       setRole(newRole);
       setLocation(newLocation);
@@ -61,10 +73,10 @@ function App() {
     setIsLocationVisible(false);
     setIsFriendVisible(false);
     setIsActionVisible(false);
-    
+
     // Загружаем новые данные
     loadData();
-    
+
     // Сбрасываем текст на заглушки
     setRole("Роль");
     setLocation("Локация");
@@ -72,14 +84,14 @@ function App() {
     setAction("Действие");
   }
 
-  async function show_next(){
+  async function show_next() {
     // Загружаем новые данные при первом нажатии
     if (count === 0) {
       await loadData();
     }
 
     // Показываем следующую карточку по порядку
-    switch(count) {
+    switch (count) {
       case 0:
         setIsRoleVisible(true);
         break;
@@ -95,7 +107,7 @@ function App() {
       default:
         break;
     }
-    
+
     setCount(prevCount => prevCount + 1);
   }
 
@@ -124,8 +136,8 @@ function App() {
         </div>
         <div className="row">
           <div className="col border border-black">
-            <button 
-              className="btn btn-primary" 
+            <button
+              className="btn btn-primary"
               onClick={() => show_next()}
               disabled={count >= 4} // Отключаем кнопку после открытия всех карточек
             >
@@ -136,6 +148,16 @@ function App() {
             <button className="btn btn-primary" onClick={() => updateHistory()}>
               Пересобрать историю
             </button>
+          </div>
+          <div className="col border border-black">
+            <button className="btn btn-success" onClick={() => generateStory()}>
+              Сгенерировать основу истории
+            </button>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col border border-black">
+            {storyHint}
           </div>
         </div>
       </div>

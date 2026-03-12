@@ -84,3 +84,20 @@ def read_root():
     return {
         "action": action
     }
+
+@app.get("/get/story/")
+def generate_story():
+    role = random.choice(roles)
+    location = random.choice(locations)
+    friend = random.choice(friends)
+    action = random.choice(actions)
+
+    story = f"Ты {role.lower()} в месте '{location}'. Там ты встретил {friend.lower()} и {action.lower()}."
+
+    return {
+        "role": role,
+        "location": location,
+        "friend": friend,
+        "action": action,
+        "story": story
+    }
