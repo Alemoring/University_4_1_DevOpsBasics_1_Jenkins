@@ -79,7 +79,7 @@ pipeline {
             when {
                 expression {
                     env.GIT_BRANCH_NAME == 'dev' ||
-                    env.GIT_BRANCH_NAME == 'feature'
+                    env.GIT_BRANCH_NAME.startsWith('feauture')
                 }
             }
             steps {
