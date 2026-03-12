@@ -87,11 +87,23 @@ def read_root():
 
 @app.get("/get/story/")
 def generate_story():
-    role = random.choice(roles)
-    location = random.choice(locations)
-    friend = random.choice(friends)
-    action = random.choice(actions)
-
+    if (random.randint(0, 1)):
+        role = random.choice(roles)
+    else:
+        role = "Придумай сам"
+    if (random.randint(0, 1)):
+        location = random.choice(locations)
+    else:
+        location = "Придумай сам"
+    if (random.randint(0, 1)):
+        friend = random.choice(friends)
+    else:
+        friend = "Придумай сам"
+    if (random.randint(0, 1)):
+        action = random.choice(actions)
+    else:
+        action = "Придумай сам"
+    
     story = f"Ты {role.lower()} в месте '{location}'. Там ты встретил {friend.lower()} и {action.lower()}."
 
     return {
