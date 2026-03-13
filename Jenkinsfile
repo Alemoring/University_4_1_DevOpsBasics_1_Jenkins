@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        COMPOSE_PROD = "docker compose"
+        COMPOSE_DEV = "docker compose -f docker-compose.dev.yml"
+    }
+
     stages {
 
         stage('Checkout') {
@@ -22,60 +27,25 @@ pipeline {
             }
         }
 
-        stage('Install backend dependencies') {
+        stage('Build images') {
             steps {
-                sh '''
-                cd backend
-                python3 -m venv venv
-                venv/bin/pip install -r requirements.txt
-                '''
+                sh 'docker compose build'
             }
         }
 
-        stage('Install frontend dependencies') {
-            steps {
-                sh '''
-                cd client/my-app
-                npm install
-                '''
-            }
-        }
-
-        stage('Build React') {
-            steps {
-                sh '''
-                cd client/my-app
-                npm run build
-                '''
-            }
-        }
-
-        stage('Deploy main') {
+        stage('Deploy PROD') {
             when {
                 expression { env.GIT_BRANCH_NAME == 'main' }
             }
             steps {
                 sh '''
-                sudo systemctl restart fastapi
-                sudo systemctl restart react
+                docker compose down
+                docker compose up -d --build
                 '''
             }
         }
 
-        stage('Backend tests') {
-            when {
-                expression { env.GIT_BRANCH_NAME == 'dev' }
-            }
-            steps {
-                sh '''
-                cd backend
-                . venv/bin/activate
-                pytest -v
-                '''
-            }
-        }
-
-        stage('Deploy dev servers') {
+        stage('Deploy DEV') {
             when {
                 expression {
                     env.GIT_BRANCH_NAME == 'dev' ||
@@ -84,8 +54,8 @@ pipeline {
             }
             steps {
                 sh '''
-                sudo systemctl restart fastapi-debug
-                sudo systemctl restart react-debug
+                docker compose -f docker-compose.dev.yml down
+                docker compose -f docker-compose.dev.yml up -d --build
                 '''
             }
         }
