@@ -45,6 +45,17 @@ pipeline {
             }
         }
 
+        stage('Run tests') {
+            when {
+                expression {
+                    env.GIT_BRANCH_NAME == 'dev'
+                }
+            }
+            steps {
+                sh 'docker compose -f docker-compose.dev.yml run backend-test'
+            }
+        }
+
         stage('Deploy DEV') {
             when {
                 expression {

@@ -1,5 +1,9 @@
 services:
 
+  backend-test:
+    build: ./backend
+    command: pytest
+
   backend-dev:
     build: ./backend
     container_name: fastapi_backend_dev
